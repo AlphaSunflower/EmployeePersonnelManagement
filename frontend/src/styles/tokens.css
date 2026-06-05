@@ -1,0 +1,92 @@
+:root {
+  /* === Colors === */
+  --color-primary:             hsla(217, 89%, 61%, 1);
+  --color-primary-light:       hsla(217, 89%, 71%, 1);
+  --color-primary-dark:        hsla(217, 89%, 51%, 1);
+  --color-primary-glass:       hsla(217, 89%, 61%, 0.12);
+  --color-primary-glass-light: hsla(217, 89%, 61%, 0.08);
+  --color-primary-glass-lighter: hsla(217, 89%, 61%, 0.04);
+  --color-primary-glass-lightest: hsla(217, 89%, 61%, 0.02);
+
+  --color-success:             hsla(160, 84%, 39%, 1);
+  --color-warning:             hsla(38, 92%, 50%, 1);
+  --color-danger:              hsla(0, 84%, 60%, 1);
+  --color-info:                hsla(215, 20%, 65%, 1);
+
+  /* === Backgrounds === */
+  --bg-base:                   hsla(225, 30%, 12%, 1);
+  --bg-base-gradient:          linear-gradient(135deg, #0f172a 0%, #1a1a3e 50%, #0f172a 100%);
+  --bg-elevated:               hsla(0, 0%, 100%, 0.06);
+  --bg-card:                   hsla(0, 0%, 100%, 0.08);
+  --bg-sidebar:                hsla(225, 30%, 8%, 0.92);
+  --bg-header:                 hsla(0, 0%, 100%, 0.04);
+
+  /* === Text === */
+  --text-primary:              hsla(0, 0%, 95%, 1);
+  --text-secondary:            hsla(0, 0%, 75%, 1);
+  --text-muted:                hsla(0, 0%, 55%, 1);
+
+  /* === Borders (glass) === */
+  --border-glass-light:        hsla(255, 255, 255, 0.10);
+  --border-glass-medium:       hsla(255, 255, 255, 0.16);
+  --border-glass-strong:       hsla(255, 255, 255, 0.22);
+  --border-accent:             hsla(217, 89%, 61%, 0.35);
+
+  /* === Blur scale === */
+  --glass-blur-sm:             4px;
+  --glass-blur-md:             12px;
+  --glass-blur-lg:             20px;
+  --glass-blur-xl:             40px;
+
+  /* === Border radius === */
+  --radius-xs:                 4px;
+  --radius-sm:                 8px;
+  --radius-md:                 12px;
+  --radius-lg:                 16px;
+  --radius-xl:                 24px;
+  --radius-full:               9999px;
+
+  /* === Shadows === */
+  --shadow-sm:                 0 1px 2px hsla(217, 30%, 8%, 0.3);
+  --shadow-md:                 0 4px 16px hsla(217, 30%, 8%, 0.4),
+                               0 0 0 1px hsla(255, 255, 255, 0.06);
+  --shadow-lg:                 0 8px 32px hsla(217, 30%, 8%, 0.5),
+                               0 0 0 1px hsla(255, 255, 255, 0.08);
+  --shadow-xl:                 0 16px 48px hsla(217, 30%, 8%, 0.6);
+  --shadow-glow:               0 0 20px hsla(217, 89%, 61%, 0.25),
+                               0 0 60px hsla(217, 89%, 61%, 0.08);
+  --shadow-glow-success:       0 0 20px hsla(160, 84%, 39%, 0.2);
+  --shadow-glow-danger:        0 0 20px hsla(0, 84%, 60%, 0.2);
+
+  /* === Spacing (8pt grid) === */
+  --space-1:                   4px;
+  --space-2:                   8px;
+  --space-3:                   12px;
+  --space-4:                   16px;
+  --space-5:                   20px;
+  --space-6:                   24px;
+  --space-8:                   32px;
+  --space-10:                  40px;
+  --space-12:                  48px;
+
+  /* === Typography === */
+  --font-sans:                 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:                 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  --font-size-xs:              11px;
+  --font-size-sm:              12px;
+  --font-size-body:            14px;
+  --font-size-lg:              16px;
+  --font-size-xl:              20px;
+  --font-size-2xl:             24px;
+  --font-size-3xl:             32px;
+
+  /* === Transitions === */
+  --transition-fast:           150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base:           250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow:           400ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring:         500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  color-scheme: dark;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-body);
+}
