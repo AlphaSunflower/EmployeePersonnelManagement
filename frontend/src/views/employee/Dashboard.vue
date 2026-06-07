@@ -17,8 +17,13 @@
       </el-col>
       <el-col :span="8">
         <GlassCard class="dash-card" title="我的信息" padding="md">
-          <p class="dash-card__big">{{ store.username }}</p>
-          <p class="dash-card__label">员工门户</p>
+          <div class="info-card">
+            <el-avatar :src="profile?.avatarUrl" :size="48">{{ store.username?.charAt(0) }}</el-avatar>
+            <div>
+              <p class="dash-card__big">{{ profile?.name || store.username }}</p>
+              <p class="dash-card__label">{{ profile?.deptName || '员工门户' }}</p>
+            </div>
+          </div>
         </GlassCard>
       </el-col>
     </el-row>
@@ -52,9 +57,11 @@ const attChartRef = ref(null)
 const salaryChartRef = ref(null)
 let attChart = null
 let salaryChart = null
-const headers = { 'X-Employee-Id': store.employeeId }
+const profile = ref(null)
+const headers = { 'X-Employee-Id': store.employeeId, 'X-User-Id': store.userId }
 
 onMounted(async () => {
+  try { profile.value = await request.get('/employees/me', { headers }) } catch (e) {}
   // Monthly attendance
   try {
     const m = await request.get('/attendance/monthly', {
@@ -135,4 +142,6 @@ onUnmounted(() => window.removeEventListener('resize', onResize))
 .dash-card__label { font-size: var(--font-size-sm); color: var(--text-muted); margin: 0; }
 .dash-btn { width: 100%; height: 48px; font-size: var(--font-size-lg); margin-top: var(--space-3); }
 .dash-chart { width: 100%; height: 280px; }
+.info-card { display: flex; align-items: center; gap: var(--space-4); }
+.info-card .dash-card__big { margin: 0; }
 </style>

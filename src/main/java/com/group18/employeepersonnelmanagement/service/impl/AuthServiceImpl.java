@@ -33,4 +33,20 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtTokenProvider.generateToken(user.getId(), user.getUsername(), user.getRole());
         return new LoginResponse(token, user.getRole(), user.getId(), user.getEmployeeId(), user.getUsername());
     }
+
+    @Override
+    public void changePassword(Long userId, String oldPassword, String newPassword) {
+        if (newPassword == null || newPassword.length() < 6) {
+            throw new RuntimeException("New password must be at least 6 characters");
+        }
+        SysUser user = sysUserMapper.selectById(userId);
+        if (user == null || user.getStatus() == 0) {
+            throw new RuntimeException("Invalid credentials");
+        }
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new RuntimeException("Invalid credentials");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        sysUserMapper.updateById(user);
+    }
 }

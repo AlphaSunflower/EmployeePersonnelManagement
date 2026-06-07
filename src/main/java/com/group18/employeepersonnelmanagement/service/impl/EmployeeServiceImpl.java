@@ -1,30 +1,27 @@
 package com.group18.employeepersonnelmanagement.service.impl;
 
-import com.aliyun.oss.OSS;
-import com.aliyun.oss.OSSClientBuilder;
 import com.group18.employeepersonnelmanagement.entity.*;
 import com.group18.employeepersonnelmanagement.mapper.*;
 import com.group18.employeepersonnelmanagement.service.EmployeeService;
+import com.group18.employeepersonnelmanagement.service.FileStorageService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
@@ -34,11 +31,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final DepartmentMapper departmentMapper;
     private final PositionMapper positionMapper;
     private final PasswordEncoder passwordEncoder;
-
-    @Value("${aliyun.oss.endpoint}") private String endpoint;
-    @Value("${aliyun.oss.access-key-id}") private String accessKeyId;
-    @Value("${aliyun.oss.access-key-secret}") private String accessKeySecret;
-    @Value("${aliyun.oss.bucket-name}") private String bucketName;
+    private final FileStorageService fileStorageService;
 
     @Override
     public IPage<Employee> page(Integer current, Integer size, String keyword, Long deptId, String status) {
@@ -104,24 +97,23 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public String uploadAvatar(Long employeeId, MultipartFile file) {
-        String originalName = file.getOriginalFilename();
-        String ext = originalName != null && originalName.contains(".") 
-            ? originalName.substring(originalName.lastIndexOf(".")) : ".jpg";
-        String objectName = "avatars/" + employeeId + "_" + System.currentTimeMillis() + ext;
-        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
-        try {
-            ossClient.putObject(bucketName, objectName, file.getInputStream());
-            String url = "https://" + bucketName + "." + endpoint + "/" + objectName;
-            Employee emp = new Employee();
-            emp.setId(employeeId);
-            emp.setAvatarUrl(url);
-            employeeMapper.updateById(emp);
-            return url;
-        } catch (Exception e) {
-            throw new RuntimeException("Avatar upload failed: " + e.getMessage());
-        } finally {
-            ossClient.shutdown();
+        if (file.isEmpty()) {
+            throw new RuntimeException("File is empty");
         }
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new RuntimeException("Only image files are allowed");
+        }
+        if (file.getSize() > 5 * 1024 * 1024) {
+            throw new RuntimeException("File size must be less than 5MB");
+        }
+        String url = fileStorageService.upload("avatars", file);
+        Employee emp = new Employee();
+        emp.setId(employeeId);
+        emp.setAvatarUrl(url);
+        employeeMapper.updateById(emp);
+        log.info("Avatar updated for employee {}: {}", employeeId, url);
+        return url;
     }
 
     @Override

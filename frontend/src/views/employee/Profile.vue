@@ -13,8 +13,18 @@
       </el-descriptions>
 
       <div class="avatar-section">
-        <el-avatar v-if="profile.avatarUrl" :src="profile.avatarUrl" :size="80" class="profile-avatar" />
-        <el-upload :action="uploadUrl" :headers="headers" :on-success="onUploadSuccess" :show-file-list="false" accept="image/*">
+        <el-avatar :src="profile.avatarUrl" :size="80" class="profile-avatar">
+          {{ profile.name?.charAt(0) }}
+        </el-avatar>
+        <el-upload
+          :action="uploadUrl"
+          :headers="headers"
+          :on-success="onUploadSuccess"
+          :on-error="onUploadError"
+          :before-upload="beforeUpload"
+          :show-file-list="false"
+          accept="image/*"
+        >
           <el-button type="primary">上传头像</el-button>
         </el-upload>
       </div>
@@ -24,7 +34,8 @@
       <h3 class="section-title">修改联系方式</h3>
       <el-form :model="form" label-width="120px" class="profile-form">
         <el-form-item label="手机号">
-          <el-input v-model="form.phone" />
+          <el-input v-model="form.phone" disabled />
+          <span class="field-hint">手机号需联系管理员修改</span>
         </el-form-item>
         <el-form-item label="邮箱">
           <el-input v-model="form.email" />
@@ -36,6 +47,22 @@
           <el-input v-model="form.emergencyPhone" />
         </el-form-item>
         <el-button type="primary" @click="saveProfile">保存修改</el-button>
+      </el-form>
+
+      <el-divider />
+
+      <h3 class="section-title">修改密码</h3>
+      <el-form :model="pwdForm" label-width="120px" class="profile-form">
+        <el-form-item label="当前密码">
+          <el-input v-model="pwdForm.oldPassword" type="password" show-password autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="新密码">
+          <el-input v-model="pwdForm.newPassword" type="password" show-password autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="确认新密码">
+          <el-input v-model="pwdForm.confirmPassword" type="password" show-password autocomplete="off" />
+        </el-form-item>
+        <el-button type="primary" @click="changePassword">修改密码</el-button>
       </el-form>
     </GlassCard>
   </div>
@@ -51,9 +78,32 @@ const profile = ref(null)
 const uploadUrl = '/api/employees/me/avatar'
 const headers = { Authorization: `Bearer ${store.token}`, 'X-User-Id': store.userId }
 const form = reactive({ phone: '', email: '', emergencyContact: '', emergencyPhone: '' })
+const pwdForm = reactive({ oldPassword: '', newPassword: '', confirmPassword: '' })
 onMounted(async () => { const res = await request.get('/employees/me', { headers }); profile.value = res; Object.assign(form, res) })
+function beforeUpload(file) {
+  if (!file.type.startsWith('image/')) { ElMessage.warning('只能上传图片文件'); return false }
+  if (file.size > 5 * 1024 * 1024) { ElMessage.warning('图片大小不能超过5MB'); return false }
+  return true
+}
 function onUploadSuccess(res) { profile.value.avatarUrl = res.data; ElMessage.success('头像上传成功') }
+function onUploadError() { ElMessage.error('头像上传失败，请重试') }
 async function saveProfile() { await request.put('/employees/me', form, { headers }); ElMessage.success('修改成功') }
+async function changePassword() {
+  if (!pwdForm.oldPassword || !pwdForm.newPassword || !pwdForm.confirmPassword) {
+    return ElMessage.warning('请填写完整密码信息')
+  }
+  if (pwdForm.newPassword !== pwdForm.confirmPassword) {
+    return ElMessage.warning('两次输入的新密码不一致')
+  }
+  await request.put('/auth/change-password', {
+    oldPassword: pwdForm.oldPassword,
+    newPassword: pwdForm.newPassword
+  }, { headers })
+  ElMessage.success('密码修改成功')
+  pwdForm.oldPassword = ''
+  pwdForm.newPassword = ''
+  pwdForm.confirmPassword = ''
+}
 </script>
 
 <style scoped>
@@ -78,5 +128,10 @@ async function saveProfile() { await request.put('/employees/me', form, { header
 }
 .profile-form {
   max-width: 560px;
+}
+.field-hint {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  margin-left: var(--space-2);
 }
 </style>

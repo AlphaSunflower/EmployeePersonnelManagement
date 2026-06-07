@@ -18,6 +18,9 @@
           </template>
         </el-table-column>
       </el-table>
+      <template #footer>
+        <el-pagination v-model:current-page="page.current" :page-size="page.size" :total="page.total" layout="prev,pager,next" @current-change="load" />
+      </template>
     </GlassCard>
 
     <el-dialog v-model="dialogVisible" :title="editing.id ? '编辑薪酬' : '设置薪酬'" width="450px">
@@ -42,8 +45,9 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue';import request from '@/utils/request';import { ElMessage } from 'element-plus'
 const records = ref([]);const employeeList = ref([]);const dialogVisible = ref(false);const editing = ref({});const form = reactive({ employeeId: null, basicSalary: 0, performanceSalary: 0, subsidy: 0 })
+const page = reactive({ current: 1, size: 10, total: 0 })
 onMounted(() => { load(); loadEmployees() })
-async function load() { const r = await request.get('/salary/employee-salaries');records.value = r.records }
+async function load() { const r = await request.get('/salary/employee-salaries', { params: { current: page.current, size: page.size } });records.value = r.records;page.total = r.total }
 async function loadEmployees() { try { const r = await request.get('/employees?size=200'); employeeList.value = r.records || [] } catch (e) {} }
 function openDialog(row) {
   editing.value = row || {}

@@ -5,4 +5,5 @@ import com.group18.employeepersonnelmanagement.dto.LoginResponse;
 
 public interface AuthService {
     LoginResponse login(LoginRequest request);
+    void changePassword(Long userId, String oldPassword, String newPassword);
 }

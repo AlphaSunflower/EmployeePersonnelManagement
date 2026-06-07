@@ -136,3 +136,48 @@ frontend/src/
 | Vite | 8.0.12 |
 | Pinia | 3.0.4 |
 | ECharts | 6.1.0 |
+
+## Docker 部署
+
+部署文件在 `deploy/` 目录下。
+
+### 打包步骤
+
+```bash
+# 1. 构建后端 JAR
+./mvnw package -DskipTests
+cp target/*.jar deploy/backend/app.jar
+
+# 2. 构建前端
+cd frontend && npm run build
+cp -r dist ../deploy/frontend/dist
+
+# 3. 复制环境配置（可选）
+cp deploy/.env.example deploy/.env
+# 编辑 deploy/.env 修改密码和密钥
+```
+
+最终 deploy/ 目录结构：
+```
+deploy/
+├── docker-compose.yml
+├── .env
+├── init.sql
+├── backend/
+│   ├── Dockerfile
+│   └── app.jar
+└── frontend/
+    ├── Dockerfile
+    ├── nginx.conf
+    └── dist/
+```
+
+### 服务器部署
+
+```bash
+# 将 deploy/ 目录上传到服务器后
+cd deploy
+docker compose up -d
+```
+
+服务端口：前端 80，后端 8080，MySQL 3307（映射到主机）

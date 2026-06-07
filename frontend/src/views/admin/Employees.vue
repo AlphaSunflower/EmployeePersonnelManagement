@@ -19,7 +19,14 @@
 
     <GlassCard padding="lg" class="mt-16">
       <el-table :data="employees" stripe>
-        <el-table-column prop="name" label="姓名" />
+        <el-table-column label="姓名">
+          <template #default="{row}">
+            <div class="name-cell">
+              <el-avatar :src="row.avatarUrl" :size="32">{{ row.name?.charAt(0) }}</el-avatar>
+              <span>{{ row.name }}</span>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="性别"><template #default="{row}">{{ row.gender === 1 ? '男' : '女' }}</template></el-table-column>
         <el-table-column prop="phone" label="手机号" />
         <el-table-column prop="hireDate" label="入职日期" />
@@ -114,4 +121,5 @@ async function exportRoster() {
 .admin-employees { animation: float-up 0.5s ease both; }
 .filter-row { align-items: center; }
 .mt-16 { margin-top: 16px; }
+.name-cell { display: flex; align-items: center; gap: var(--space-3); }
 </style>

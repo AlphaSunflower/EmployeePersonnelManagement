@@ -29,9 +29,13 @@ jwt:
 aliyun:
   oss:
     endpoint: ${OSS_ENDPOINT:oss-cn-shanghai.aliyuncs.com}
-    access-key-id: ${OSS_ACCESS_KEY_ID:}
-    access-key-secret: ${OSS_ACCESS_KEY_SECRET:}
+    access-key-id: ${OSS_ACCESS_KEY_ID:LTAI5tSm87xve5s3KV5TDD7j}
+    access-key-secret: ${OSS_ACCESS_KEY_SECRET:9l2Ywn9obeXYFidZ4bdNG43NbQlM9b}
     bucket-name: ${OSS_BUCKET_NAME:employee-person}
+
+file:
+  storage-type: ${STORAGE_TYPE:local}
+  upload-dir: uploads
 
 server:
   port: 8080
