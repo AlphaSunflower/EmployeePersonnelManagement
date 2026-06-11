@@ -2,7 +2,7 @@
   application:
     name: EmployeePersonnelManagement
   datasource:
-    url: jdbc:mysql://localhost:3306/employee_personnel?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://127.0.0.1:3306/employee_personnel?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -29,8 +29,8 @@ jwt:
 aliyun:
   oss:
     endpoint: ${OSS_ENDPOINT:oss-cn-shanghai.aliyuncs.com}
-    access-key-id: ${OSS_ACCESS_KEY_ID:LTAI5tSm87xve5s3KV5TDD7j}
-    access-key-secret: ${OSS_ACCESS_KEY_SECRET:9l2Ywn9obeXYFidZ4bdNG43NbQlM9b}
+    access-key-id: ${OSS_ACCESS_KEY_ID:}
+    access-key-secret: ${OSS_ACCESS_KEY_SECRET:}
     bucket-name: ${OSS_BUCKET_NAME:employee-person}
 
 file:

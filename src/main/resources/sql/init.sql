@@ -3,9 +3,8 @@
 -- Host: 127.0.0.1    Database: employee_personnel
 -- ------------------------------------------------------
 -- Server version	8.0.31
-CREATE DATABASE IF NOT EXISTS employee_personnel DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE employee_personnel;
-
+create database if not exists employee_personnel;
+use employee_personnel;
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -446,4 +445,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-07 17:24:57
+-- Dump completed on 2026-06-11  0:27:43
